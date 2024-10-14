@@ -3,26 +3,14 @@ import glob
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from tensorflow import keras
-from keras import layers
-
-# 設定 GPU 設定以避免 OOM
-gpus = tf.config.experimental.list_physical_devices('GPU')
-if gpus:
-    try:
-        for gpu in gpus:
-            tf.config.experimental.set_virtual_device_configuration(
-                gpu,
-                [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=4096)])  # 限制 GPU 記憶體
-    except RuntimeError as e:
-        print(e)
+from tensorflow.keras import layers, Model
 
 # 1. 載入資料
 def load_images_from_folder(folder):
     images = []
     for filename in glob.glob(os.path.join(folder, '*.png')):  # 假設圖片格式為 PNG
-        img = tf.keras.utils.load_img(filename, color_mode='grayscale', target_size=(128, 128))
-        img_array = tf.keras.utils.img_to_array(img) / 255.0  # 正規化
+        img = tf.keras.preprocessing.image.load_img(filename, color_mode='grayscale', target_size=(128, 128))
+        img_array = tf.keras.preprocessing.image.img_to_array(img) / 255.0  # 正規化
         images.append(img_array)
     return np.array(images)
 
@@ -55,25 +43,29 @@ def unet_model(input_size=(128, 128, 1)):
     conv5 = layers.Conv2D(1024, (3, 3), activation='relu', padding='same')(pool4)
     conv5 = layers.Conv2D(1024, (3, 3), activation='relu', padding='same')(conv5)
 
-    up6 = layers.Concatenate()([layers.Conv2DTranspose(512, (2, 2), strides=(2, 2), padding='same')(conv5), conv4])
+    up6 = layers.Conv2DTranspose(512, (2, 2), strides=(2, 2), padding='same')(conv5)
+    up6 = layers.Concatenate()([up6, conv4])
     conv6 = layers.Conv2D(512, (3, 3), activation='relu', padding='same')(up6)
     conv6 = layers.Conv2D(512, (3, 3), activation='relu', padding='same')(conv6)
 
-    up7 = layers.Concatenate()([layers.Conv2DTranspose(256, (2, 2), strides=(2, 2), padding='same')(conv6), conv3])
+    up7 = layers.Conv2DTranspose(256, (2, 2), strides=(2, 2), padding='same')(conv6)
+    up7 = layers.Concatenate()([up7, conv3])
     conv7 = layers.Conv2D(256, (3, 3), activation='relu', padding='same')(up7)
     conv7 = layers.Conv2D(256, (3, 3), activation='relu', padding='same')(conv7)
 
-    up8 = layers.Concatenate()([layers.Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same')(conv7), conv2])
+    up8 = layers.Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same')(conv7)
+    up8 = layers.Concatenate()([up8, conv2])
     conv8 = layers.Conv2D(128, (3, 3), activation='relu', padding='same')(up8)
     conv8 = layers.Conv2D(128, (3, 3), activation='relu', padding='same')(conv8)
 
-    up9 = layers.Concatenate()([layers.Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same')(conv8), conv1])
+    up9 = layers.Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same')(conv8)
+    up9 = layers.Concatenate()([up9, conv1])
     conv9 = layers.Conv2D(64, (3, 3), activation='relu', padding='same')(up9)
     conv9 = layers.Conv2D(64, (3, 3), activation='relu', padding='same')(conv9)
 
     outputs = layers.Conv2D(1, (1, 1), activation='sigmoid')(conv9)
 
-    model = keras.Model(inputs=[inputs], outputs=[outputs])
+    model = Model(inputs=[inputs], outputs=[outputs])
     return model
 
 # 3. 設定訓練參數
