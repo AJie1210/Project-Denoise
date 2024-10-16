@@ -107,7 +107,7 @@ print(f"測試集大小：{X_test.shape[0]} 張圖像")
 
 # 4. 建立 TensorFlow Dataset
 batch_size = 16
-epochs = 50
+epochs = 100
 
 def create_dataset(noisy, clean, batch_size=16, shuffle=True):
     dataset = tf.data.Dataset.from_tensor_slices((noisy, clean))
@@ -208,17 +208,17 @@ print("去雜訊處理完成。")
 plt.figure(figsize=(12, 4))
 
 plt.subplot(1, 2, 1)
-plt.plot(history.history['loss'], label='訓練損失')
-plt.plot(history.history['val_loss'], label='驗證損失')
-plt.title('訓練與驗證損失')
+plt.plot(history.history['loss'], label='Training loss')
+plt.plot(history.history['val_loss'], label='Validation loss')
+plt.title('Training and Validation loss')
 plt.xlabel('Epoch')
-plt.ylabel('損失')
+plt.ylabel('Loss')
 plt.legend()
 
 plt.subplot(1, 2, 2)
-plt.plot(history.history['mae'], label='訓練 MAE')
-plt.plot(history.history['val_mae'], label='驗證 MAE')
-plt.title('訓練與驗證 MAE')
+plt.plot(history.history['mae'], label='Training MAE')
+plt.plot(history.history['val_mae'], label='Validation MAE')
+plt.title('Training and Validation MAE')
 plt.xlabel('Epoch')
 plt.ylabel('MAE')
 plt.legend()
