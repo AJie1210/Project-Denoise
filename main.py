@@ -238,17 +238,17 @@ def visualize_denoising(model, noisy_images, clean_images, num_samples=5):
         plt.figure(figsize=(12, 4))
         
         plt.subplot(1, 3, 1)
-        plt.title('原始雜訊圖像')
+        plt.title('Noise Image')
         plt.imshow(noisy_images[i].squeeze(), cmap='gray')
         plt.axis('off')
         
         plt.subplot(1, 3, 2)
-        plt.title('去雜訊後圖像')
+        plt.title('Denoise Image')
         plt.imshow(denoised_img, cmap='gray')
         plt.axis('off')
         
         plt.subplot(1, 3, 3)
-        plt.title('清晰圖像')
+        plt.title('Clear Image')
         plt.imshow(clean_img, cmap='gray')
         plt.axis('off')
         
@@ -256,4 +256,4 @@ def visualize_denoising(model, noisy_images, clean_images, num_samples=5):
 
 print("可視化去雜訊效果...")
 visualize_denoising(best_model, X_test, y_test, num_samples=5)
-print("完成所有步驟。")
+print("Complete all step")
