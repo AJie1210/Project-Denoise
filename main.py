@@ -107,7 +107,7 @@ print(f"測試集大小：{X_test.shape[0]} 張圖像")
 
 # 4. 建立 TensorFlow Dataset
 batch_size = 16
-epochs = 100
+epochs = 50
 
 def create_dataset(noisy, clean, batch_size=16, shuffle=True):
     dataset = tf.data.Dataset.from_tensor_slices((noisy, clean))
@@ -165,8 +165,6 @@ def evaluate_model(model, test_noisy, test_clean):
 print("載入最佳模型進行評估...")
 best_model = load_model('best_denoising_unet_model.h5')
 evaluate_model(best_model, X_test, y_test)
-
-# 8. 使用模型進行去雜訊
 def denoise_and_save(model, input_folder, output_folder, target_size=(128, 128)):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
