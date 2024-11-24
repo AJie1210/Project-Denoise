@@ -11,7 +11,7 @@ def add_noise(image):
     if noise_type == 'gaussian':
         # 添加高斯雜訊
         mean = 0
-        sigma = 25
+        sigma = 10
         gauss = np.random.normal(mean, sigma, image.shape).astype(np.uint8)
         noisy_image = cv2.add(image, gauss)
     else:
@@ -33,8 +33,8 @@ def add_noise(image):
     return noisy_image
 
 # 指定資料夾路徑
-input_folder = 'D:\\Flicker2K\\Grayscale'
-output_folder = 'D:\\Flicker2K\\Noise'
+input_folder = 'D:\\Flicker2K\\DenoiseImage\\OriginalImages'
+output_folder = 'D:\\Flicker2K\\DenoiseImage\\NoisyImages'
 
 # 創建輸出資料夾（如果不存在）
 if not os.path.exists(output_folder):
