@@ -1,7 +1,7 @@
 from PIL import Image
 import os
 
-input_dir = 'D:\\Flicker2K\\archive\\Flickr2K'
+input_dir = 'D:\\Flicker2K\\OriginImages\\Flickr2K'
 output_dir = 'D:\\Flicker2K\\Grayscale'
 
 def convert_to_grayscale(input_dir, output_dir):
