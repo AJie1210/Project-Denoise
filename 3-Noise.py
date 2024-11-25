@@ -33,8 +33,8 @@ def add_noise(image):
     return noisy_image
 
 # 指定資料夾路徑
-input_folder = 'D:\\Flicker2K\\DenoiseImage\\OriginalImages'
-output_folder = 'D:\\Flicker2K\\DenoiseImage\\NoisyImages'
+input_folder = 'D:\\Flicker2K\\Grayscale'
+output_folder = 'D:\\Flicker2K\\Noise'
 
 # 創建輸出資料夾（如果不存在）
 if not os.path.exists(output_folder):
