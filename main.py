@@ -20,7 +20,7 @@ np.random.seed(42)
 tf.random.set_seed(42)
 
 # 1. 載入資料
-def load_images_from_folder(folder, target_size=(128, 128)):
+def load_images_from_folder(folder, target_size=(256, 256)):
     images = []
     filenames = sorted(glob.glob(os.path.join(folder, '*.png')))  # 假設圖片格式為 PNG
     if not filenames:
@@ -62,7 +62,7 @@ def multi_scale_conv_block(inputs, filters):
     return concat
 
 # 3. 建立生成器模型（U-Net 結構，加入多尺度卷積）
-def unet_generator(input_size=(128, 128, 1)):
+def unet_generator(input_size=(256, 256, 1)):
     inputs = layers.Input(input_size)
 
     # 編碼器
@@ -103,7 +103,7 @@ def unet_generator(input_size=(128, 128, 1)):
     return model
 
 # 4. 建立判別器模型
-def discriminator_model(input_shape=(128,128,1)):
+def discriminator_model(input_shape=(256,256,1)):
     inputs = layers.Input(shape=input_shape)
     x = layers.Conv2D(64, (3,3), strides=2, padding='same')(inputs)
     x = layers.LeakyReLU(alpha=0.2)(x)
@@ -149,7 +149,7 @@ val_dataset = create_dataset(X_val, y_val, batch_size=batch_size, shuffle=False)
 
 # 7. 定義感知損失（使用 VGG19）
 print("定義感知損失...")
-vgg = VGG19(include_top=False, weights='imagenet', input_shape=(128, 128, 3))
+vgg = VGG19(include_top=False, weights='imagenet', input_shape=(256, 256, 3))
 vgg_model = Model(inputs=vgg.input, outputs=vgg.get_layer('block3_conv3').output)
 vgg_model.trainable = False
 
