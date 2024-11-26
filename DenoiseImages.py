@@ -61,7 +61,7 @@ def unet_generator(input_size=(128, 128, 1)):
 # 3. 加載預訓練的生成器模型權重
 print("加載生成器模型...")
 generator = unet_generator()
-model_weights = 'D:\\GitHub\\Denoise\\training_checkpoints\\generator_epoch_43'  # 請替換為您的最佳模型權重文件路徑
+model_weights = 'D:\\GitHub\\Denoise\\training_checkpoints\\generator_epoch_68'  # 請替換為您的最佳模型權重文件路徑
 generator.load_weights(model_weights)
 print(f"已加載模型權重：{model_weights}")
 
@@ -106,7 +106,7 @@ print("開始圖像去雜訊處理...")
 psnr_list = []
 ssim_list = []
 mse_list = []
-num_images_to_visualize = 5  # 可視化前 5 張圖像
+num_images_to_visualize = 28  # 可視化前 5 張圖像
 
 for idx in range(len(noisy_images)):
     noisy_img = noisy_images[idx]
