@@ -157,8 +157,8 @@ vgg_model.trainable = False
 binary_cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=False)
 # 將 MAE 替換為 MSE
 mse_loss = tf.keras.losses.MeanSquaredError()
-generator_optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
-discriminator_optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
+generator_optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4) # 學習率
+discriminator_optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4) # 學習率
 
 lambda_value = 10.0  # 平衡感知損失和對抗損失的超參數
 
