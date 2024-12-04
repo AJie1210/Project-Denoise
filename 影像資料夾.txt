@@ -1,0 +1,11 @@
+# 原始灰階影像資料夾
+original_folder = 'D:\\Flicker2K\\DenoiseImage\\OriginalImages'
+
+# 已添加雜訊的影像資料夾
+noisy_folder = 'D:\\Flicker2K\\DenoiseImage\\NoisyImages'
+
+# 模型權重路徑
+model_weights = 'D:\\GitHub\\Denoise\\training_checkpoints\\generator_epoch_42'
+
+# 去雜訊後的影像保存資料夾
+denoised_output_folder = 'D:\\Flicker2K\\DenoiseImage\\DenoisedImages'
