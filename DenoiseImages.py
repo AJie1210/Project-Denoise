@@ -7,7 +7,7 @@ from tensorflow.keras import layers, Model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from skimage.metrics import peak_signal_noise_ratio as compare_psnr
 from skimage.metrics import structural_similarity as compare_ssim
-from sklearn.metrics import mean_squared_error  # 替換 mean_absolute_error 為 mean_squared_error
+from sklearn.metrics import mean_squared_error
 
 # 1. 定義多尺度卷積塊
 def multi_scale_conv_block(inputs, filters):
@@ -17,8 +17,8 @@ def multi_scale_conv_block(inputs, filters):
     concat = layers.Concatenate()([conv_1x1, conv_3x3, conv_5x5])
     return concat
 
-# 2. 定義生成器模型（與訓練時的模型架構一致）
-def unet_generator(input_size=(128, 128, 1)):
+# 2. 定義生成器模型
+def unet_generator(input_size=(256, 256, 1)):
     inputs = layers.Input(input_size)
 
     # 編碼器
@@ -58,32 +58,30 @@ def unet_generator(input_size=(128, 128, 1)):
     model = Model(inputs=[inputs], outputs=[outputs])
     return model
 
-# 3. 加載預訓練的生成器模型權重
 print("加載生成器模型...")
 generator = unet_generator()
-model_weights = 'D:\\GitHub\\Denoise\\training_checkpoints\\generator_epoch_68'  # 請替換為您的最佳模型權重文件路徑
+model_weights = 'D:\\GitHub\\Denoise\\training_checkpoints\\generator_epoch_36' # 替換為您的權重檔路徑
 generator.load_weights(model_weights)
 print(f"已加載模型權重：{model_weights}")
 
-# 4. 定義加載圖像的函數
-def load_images_from_folder(folder, target_size=(128, 128)):
+# 加載圖像函數
+def load_images_from_folder(folder, target_size=(256, 256)):
     images = []
-    filenames = sorted(glob.glob(os.path.join(folder, '*.png')))  # 假設圖片格式為 PNG
+    filenames = sorted(glob.glob(os.path.join(folder, '*.png')))
     if not filenames:
         print(f"警告：在資料夾 {folder} 中未找到任何 PNG 圖像。")
     for filename in filenames:
         try:
             img = load_img(filename, color_mode='grayscale', target_size=target_size)
-            img_array = img_to_array(img) / 255.0  # 正規化
+            img_array = img_to_array(img) / 255.0
             images.append(img_array)
         except Exception as e:
             print(f"錯誤：無法加載圖像 {filename}。錯誤信息：{e}")
     return np.array(images), filenames
 
-# 5. 從指定資料夾加載雜訊圖像和對應的原始圖像（用於評估）
-noisy_folder = 'D:\\Flicker2K\\DenoiseImage\\NoisyImages'  # 請替換為您的雜訊圖像資料夾路徑
-original_folder = 'D:\\Flicker2K\\DenoiseImage\\OriginalImages'  # 如果有原始清晰圖像，用於評估
-denoised_output_folder = 'D:\\Flicker2K\\DenoiseImage\\DenoisedImages'  # 去雜訊後圖像的保存路徑
+noisy_folder = 'D:\\Flicker2K\\DenoiseImage\\NoisyImages'
+original_folder = 'D:\\Flicker2K\\DenoiseImage\\OriginalImages'
+denoised_output_folder = 'D:\\Flicker2K\\DenoiseImage\\DenoisedImages'
 
 if not os.path.exists(denoised_output_folder):
     os.makedirs(denoised_output_folder)
@@ -92,7 +90,6 @@ print("開始加載雜訊圖像...")
 noisy_images, noisy_filenames = load_images_from_folder(noisy_folder)
 print(f"共加載 {len(noisy_images)} 張雜訊圖像。")
 
-# 如果有原始清晰圖像，用於評估
 have_original = False
 if os.path.exists(original_folder):
     print("開始加載原始圖像...")
@@ -101,40 +98,33 @@ if os.path.exists(original_folder):
     have_original = True
     assert len(original_images) == len(noisy_images), "原始圖像和雜訊圖像數量不一致。"
 
-# 6. 對每張雜訊圖像進行去雜訊，並保存結果
 print("開始圖像去雜訊處理...")
 psnr_list = []
 ssim_list = []
 mse_list = []
-num_images_to_visualize = 28  # 可視化前 5 張圖像
+num_images_to_visualize = 28
+
+# 新增可視化存檔路徑
+visualization_save_folder = 'D:\\GitHub\\Denoise\\Visualization_result'
+if not os.path.exists(visualization_save_folder):
+    os.makedirs(visualization_save_folder)
 
 for idx in range(len(noisy_images)):
     noisy_img = noisy_images[idx]
     filename = os.path.basename(noisy_filenames[idx])
 
-    # 增加一個維度，因為模型期望輸入為 (batch_size, H, W, 1)
     noisy_img_input = np.expand_dims(noisy_img, axis=0)
+    denoised_img = generator.predict(noisy_img_input)[0]
 
-    # 生成去雜訊圖像
-    denoised_img = generator.predict(noisy_img_input)
-    denoised_img = denoised_img[0]  # 移除批次維度
-
-    # 將 denoised_img 乘以 255 並轉換為 uint8 類型
     denoised_img_uint8 = (denoised_img * 255).astype(np.uint8)
-
-    # 確保 denoised_img_uint8 是三維的
     if denoised_img_uint8.ndim == 2:
         denoised_img_uint8 = np.expand_dims(denoised_img_uint8, axis=-1)
 
-    # 將數組轉換為圖像
     denoised_img_pil = tf.keras.preprocessing.image.array_to_img(denoised_img_uint8, scale=False)
-
-    # 保存去雜訊後的圖像
     denoised_img_pil.save(os.path.join(denoised_output_folder, filename))
 
     if have_original:
         clean_img = original_images[idx]
-        # 計算評估指標
         psnr = compare_psnr(clean_img.squeeze(), denoised_img.squeeze(), data_range=1.0)
         ssim = compare_ssim(clean_img.squeeze(), denoised_img.squeeze(), data_range=1.0)
         mse = mean_squared_error(clean_img.flatten(), denoised_img.flatten())
@@ -143,32 +133,34 @@ for idx in range(len(noisy_images)):
         ssim_list.append(ssim)
         mse_list.append(mse)
 
-        # 可視化並顯示結果
         if idx < num_images_to_visualize:
             plt.figure(figsize=(15, 5))
 
             plt.subplot(1, 3, 1)
-            plt.imshow(noisy_img.reshape(128,128), cmap='gray')
+            plt.imshow(noisy_img.reshape(256,256), cmap='gray')
             plt.title("Noisy")
             plt.axis('off')
 
             plt.subplot(1, 3, 2)
-            plt.imshow(denoised_img.reshape(128,128), cmap='gray')
+            plt.imshow(denoised_img.reshape(256,256), cmap='gray')
             plt.title("Denoised")
             plt.axis('off')
 
             plt.subplot(1, 3, 3)
-            plt.imshow(clean_img.reshape(128,128), cmap='gray')
+            plt.imshow(clean_img.reshape(256,256), cmap='gray')
             plt.title("Original")
             plt.axis('off')
 
             plt.suptitle(f'PSNR: {psnr:.2f} dB, SSIM: {ssim:.4f}, MSE: {mse:.4f}')
             plt.tight_layout()
+
+            # 將圖像存到指定資料夾
+            save_visualization_path = os.path.join(visualization_save_folder, f"visualization_{idx}.png")
+            plt.savefig(save_visualization_path)
             plt.show()
 
 print("所有圖像處理完成。")
 
-# 計算平均評估指標
 if have_original and psnr_list:
     avg_psnr = np.mean(psnr_list)
     avg_ssim = np.mean(ssim_list)
