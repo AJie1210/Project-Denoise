@@ -1,10 +1,5 @@
 # Denoise
 
-DenoisImage.py Result
-Avg PSNR: 29.24 dB
-Avg SSIM: 0.8850
-Avg MSE: 0.0034
-
 import os
 import glob
 import numpy as np
@@ -429,3 +424,8 @@ plot_generated_images(generator, val_dataset, num_images=5)
 訓練生成器損失：14.9485, 訓練 MSE：0.0035
 驗證生成器損失：18.3646, 驗證 MSE：0.0036
 驗證損失未改善，早停計數：5/5
+
+DenoisImage.py Result
+Avg PSNR: 29.24 dB
+Avg SSIM: 0.8850
+Avg MSE: 0.0034
