@@ -9,6 +9,7 @@ from tensorflow.keras.applications import VGG19
 from sklearn.model_selection import train_test_split
 import time
 
+# 匯入評估指標函數
 from skimage.metrics import peak_signal_noise_ratio as compare_psnr
 from skimage.metrics import structural_similarity as compare_ssim
 from sklearn.metrics import mean_squared_error
@@ -17,7 +18,7 @@ from sklearn.metrics import mean_squared_error
 np.random.seed(42)
 tf.random.set_seed(42)
 
-# 1. 載入資料 (變更為 256x256)
+# 1. 載入資料 (改為256x256)
 def load_images_from_folder(folder, target_size=(256, 256)):
     images = []
     filenames = sorted(glob.glob(os.path.join(folder, '*.png')))
@@ -128,7 +129,7 @@ print(f"訓練集大小：{X_train.shape[0]} 張圖像")
 print(f"驗證集大小：{X_val.shape[0]} 張圖像")
 
 # 6. 建立 TensorFlow Dataset
-batch_size = 8
+batch_size = 4
 epochs = 100
 
 def create_dataset(noisy, clean, batch_size=8, shuffle=True):
@@ -196,6 +197,7 @@ def val_step(noisy_images, clean_images):
     fake_output = discriminator(generated_images, training=False)
 
     adv_loss = binary_cross_entropy(tf.ones_like(fake_output), fake_output)
+
     y_true_rgb = tf.image.grayscale_to_rgb(clean_images)
     y_pred_rgb = tf.image.grayscale_to_rgb(generated_images)
     y_true_features = vgg_model(y_true_rgb)
@@ -228,6 +230,9 @@ val_mse_losses = []
 patience = 5
 best_val_loss = np.inf
 patience_counter = 0
+
+best_generator_weights = None
+best_discriminator_weights = None
 
 for epoch in range(EPOCHS):
     print(f"開始第 {epoch+1} 個 Epoch 訓練...")
@@ -283,6 +288,7 @@ for epoch in range(EPOCHS):
     print(f"訓練生成器損失：{avg_train_gen_loss:.4f}, 訓練 MSE：{avg_train_mse_loss:.4f}")
     print(f"驗證生成器損失：{avg_val_gen_loss:.4f}, 驗證 MSE：{avg_val_mse_loss:.4f}")
 
+    # 檢查早停條件
     if avg_val_gen_loss < best_val_loss:
         best_val_loss = avg_val_gen_loss
         patience_counter = 0
@@ -366,8 +372,10 @@ def plot_generated_images(generator, dataset, num_images=5, epoch=None):
 
 plot_generated_images(generator, val_dataset, num_images=5)
 
-# 將最佳權重存成.h5
+# 將最佳模型權重存為 .h5
 print("將最佳模型權重另存為 .h5 檔案...")
+generator.set_weights(best_generator_weights)
+discriminator.set_weights(best_discriminator_weights)
 generator.save('best_generator_model.h5')
 discriminator.save('best_discriminator_model.h5')
 print("儲存完成！")
