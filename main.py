@@ -129,7 +129,7 @@ print(f"訓練集大小：{X_train.shape[0]} 張圖像")
 print(f"驗證集大小：{X_val.shape[0]} 張圖像")
 
 # 6. 建立 TensorFlow Dataset
-batch_size = 4
+batch_size = 8
 epochs = 100
 
 def create_dataset(noisy, clean, batch_size=8, shuffle=True):
