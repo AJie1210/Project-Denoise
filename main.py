@@ -122,7 +122,10 @@ print("建立生成器和判別器模型...")
 generator = unet_generator()
 discriminator = discriminator_model()
 
-# 5. 資料集劃分
+# 方法一：初始化模型權重 (Forward Pass 一次)
+dummy_input = tf.ones((1,256,256,1))
+_ = generator(dummy_input, training=False)
+
 print("劃分資料集為訓練集和驗證集...")
 X_train, X_val, y_train, y_val = train_test_split(noisy_images, clean_images, test_size=0.15, random_state=42)
 print(f"訓練集大小：{X_train.shape[0]} 張圖像")
@@ -142,7 +145,7 @@ def create_dataset(noisy, clean, batch_size=8, shuffle=True):
 train_dataset = create_dataset(X_train, y_train, batch_size=batch_size, shuffle=True)
 val_dataset = create_dataset(X_val, y_val, batch_size=batch_size, shuffle=False)
 
-# 7. 定義感知損失（使用 VGG19，輸入改為256x256x3）
+# 7. 定義感知損失（使用 VGG19）
 print("定義感知損失...")
 vgg = VGG19(include_top=False, weights='imagenet', input_shape=(256, 256, 3))
 vgg_model = Model(inputs=vgg.input, outputs=vgg.get_layer('block3_conv3').output)
@@ -276,7 +279,7 @@ for epoch in range(EPOCHS):
     val_gen_losses.append(avg_val_gen_loss)
     val_mse_losses.append(avg_val_mse_loss)
 
-    # 儲存權重
+    # 儲存權重（此處已經有初始的Forward Pass，避免初始化問題）
     generator_save_path = generator_checkpoint_prefix.format(epoch=epoch+1)
     discriminator_save_path = discriminator_checkpoint_prefix.format(epoch=epoch+1)
     generator.save_weights(generator_save_path)
