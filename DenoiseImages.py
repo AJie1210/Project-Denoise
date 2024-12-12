@@ -60,7 +60,7 @@ def unet_generator(input_size=(256, 256, 1)):
 
 print("加載生成器模型...")
 generator = unet_generator()
-model_weights = 'D:\\GitHub\\Denoise\\training_checkpoints\\generator_epoch_45' # 替換為您的權重檔路徑
+model_weights = 'D:\\GitHub\\Denoise\\training_checkpoints\\generator_epoch_25' # 替換為您的權重檔路徑
 generator.load_weights(model_weights)
 print(f"已加載模型權重：{model_weights}")
 
