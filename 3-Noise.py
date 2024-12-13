@@ -11,7 +11,7 @@ def add_noise(image):
     if noise_type == 'gaussian':
         # 隨機選擇Gaussian雜訊強度
         mean = 0
-        sigma = random.randint(10, 50)  # 可依需求調整範圍
+        sigma = random.randint(5, 30)  # 可依需求調整範圍
         gauss = np.random.normal(mean, sigma, image.shape).astype(np.int16)
         
         # 將原圖與雜訊相加後裁剪回合理範圍(0-255)
@@ -36,7 +36,7 @@ def add_noise(image):
 
     else: # uniform noise
         # 隨機選擇均勻分佈雜訊強度
-        noise_level = random.randint(10, 50)  # 調整此範圍決定雜訊幅度
+        noise_level = random.randint(5, 30)  # 調整此範圍決定雜訊幅度
         # 在 [-noise_level, noise_level] 區間內產生均勻分佈雜訊
         uniform_noise = np.random.randint(-noise_level, noise_level+1, image.shape).astype(np.int16)
         noisy_image = image.astype(np.int16) + uniform_noise
@@ -45,8 +45,10 @@ def add_noise(image):
     return noisy_image
 
 # 指定資料夾路徑
-input_folder = 'D:\\Flicker2K\\Grayscale'
-output_folder = 'D:\\Flicker2K\\Noise'
+# input_folder = 'D:\\Flicker2K\\Grayscale'
+# output_folder = 'D:\\Flicker2K\\Noise'
+input_folder = 'D:\\Flicker2K\\DenoiseImage\\OriginalImages'
+output_folder = 'D:\\Flicker2K\\DenoiseImage\\NoisyImages'
 
 # 創建輸出資料夾（如果不存在）
 if not os.path.exists(output_folder):

@@ -1,3 +1,4 @@
+
 import os
 import glob
 import numpy as np
@@ -374,11 +375,3 @@ def plot_generated_images(generator, dataset, num_images=5, epoch=None):
             plt.show()
 
 plot_generated_images(generator, val_dataset, num_images=5)
-
-# 將最佳模型權重存為 .h5
-print("將最佳模型權重另存為 .h5 檔案...")
-generator.set_weights(best_generator_weights)
-discriminator.set_weights(best_discriminator_weights)
-generator.save('best_generator_model.h5')
-discriminator.save('best_discriminator_model.h5')
-print("儲存完成！")
