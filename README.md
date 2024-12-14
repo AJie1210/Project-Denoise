@@ -384,18 +384,12 @@ discriminator.set_weights(best_discriminator_weights)
 generator.save('best_generator_model.h5')
 discriminator.save('best_discriminator_model.h5')
 print("儲存完成！")
-
-
+------------------------------------------------------------------------------------------------
 
 第 36 個 Epoch 花費時間：569.28 秒
 訓練生成器損失：14.9485, 訓練 MSE：0.0035
 驗證生成器損失：18.3646, 驗證 MSE：0.0036
 驗證損失未改善，早停計數：5/5
-
-DenoisImage.py Result
-Avg PSNR: 29.24 dB
-Avg SSIM: 0.8850
-Avg MSE: 0.0034
 
 
 第 34 個 Epoch 花費時間：576.65 秒
