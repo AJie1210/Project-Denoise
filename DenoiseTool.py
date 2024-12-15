@@ -184,7 +184,7 @@ def show_result_with_metrics(denoised_img):
     denoised_image_label.image = denoised_img_tk
 
     # 顯示「去噪圖片」標籤
-    denoised_title_label.config(text="去噪圖片")
+    denoised_title_label.config(text="已去雜訊圖片")
 
     global processed_image
     processed_image = denoised_img
