@@ -67,7 +67,7 @@ generator = unet_generator()
 try:
     # 載入 main 訓練的權重
     #generator.load_weights('E:\\Denoise\\best_generator_model.h5')  # 載入訓練過的生成器權重
-    generator.load_weights('E:\\Dataset\\FINAL\\best_generator_model.h5')
+    generator.load_weights('best_generator_model.h5')
 except Exception as e:
     messagebox.showerror("Error", f"Failed to load model weights: {e}")
 
