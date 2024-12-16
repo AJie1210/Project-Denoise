@@ -14,7 +14,7 @@ def multi_scale_conv_block(inputs, filters):
     concat = layers.Concatenate()([conv_1x1, conv_3x3, conv_5x5])
     return concat
 
-def unet_generator(input_size=(256, 256, 1)):
+def unet_generator(input_size=(512, 512, 1)):
     inputs = layers.Input(input_size)
 
     # 編碼器
@@ -66,13 +66,14 @@ bold_font = font.Font(weight='bold')
 generator = unet_generator()
 try:
     # 載入 main 訓練的權重
-    generator.load_weights('best_generator_model.h5')  # 載入訓練過的生成器權重
+    #generator.load_weights('E:\\Denoise\\best_generator_model.h5')  # 載入訓練過的生成器權重
+    generator.load_weights('E:\\Dataset\\FINAL\\best_generator_model.h5')
 except Exception as e:
     messagebox.showerror("Error", f"Failed to load model weights: {e}")
 
 # 去噪處理
 def denoise_image(filepath):
-    target_size = (256, 256)
+    target_size = (512, 512)  # 修改為 512x512
     img = load_img(filepath, color_mode='grayscale', target_size=target_size)
     img_array = img_to_array(img) / 255.0  # 正規化
     img_input = np.expand_dims(img_array, axis=0)
@@ -139,14 +140,14 @@ def upload_original_and_noisy():
         noisy_title_label.config(text="雜訊圖片")
 
         # 載入並顯示原始圖片
-        original_img = Image.open(original_filepath).resize((256, 256)).convert('L')  # 灰階
-        original_img_tk = ImageTk.PhotoImage(original_img.resize((512, 512)))
+        original_img = Image.open(original_filepath).resize((512, 512)).convert('L')  # 灰階並修改為 512x512
+        original_img_tk = ImageTk.PhotoImage(original_img)
         original_image_label.config(image=original_img_tk)
         original_image_label.image = original_img_tk
 
         # 載入並顯示帶噪點的圖片
-        noisy_img = Image.open(noisy_filepath).resize((256, 256)).convert('L')  # 灰階
-        noisy_img_tk = ImageTk.PhotoImage(noisy_img.resize((512, 512)))
+        noisy_img = Image.open(noisy_filepath).resize((512, 512)).convert('L')  # 灰階並修改為 512x512
+        noisy_img_tk = ImageTk.PhotoImage(noisy_img)
         noisy_image_label.config(image=noisy_img_tk)
         noisy_image_label.image = noisy_img_tk
 
@@ -159,7 +160,7 @@ def upload_original_and_noisy():
 
         # 計算指標
         original_array = img_to_array(original_img) / 255.0
-        denoised_resized = denoised_img.resize((256, 256))
+        denoised_resized = denoised_img.resize((512, 512))
         denoised_array = img_to_array(denoised_resized) / 255.0
 
         psnr_value = tf.image.psnr(original_array, denoised_array, max_val=1.0).numpy()
@@ -178,13 +179,13 @@ def upload_original_and_noisy():
 
 # 顯示去噪後的圖片並保留原始和帶噪點的圖片
 def show_result_with_metrics(denoised_img):
-    denoised_img = denoised_img.resize((256, 256))  # 保持256x256
-    denoised_img_tk = ImageTk.PhotoImage(denoised_img.resize((512, 512)))
+    denoised_img = denoised_img.resize((512, 512))  # 修改為 512x512
+    denoised_img_tk = ImageTk.PhotoImage(denoised_img)
     denoised_image_label.config(image=denoised_img_tk)
     denoised_image_label.image = denoised_img_tk
 
     # 顯示「去噪圖片」標籤
-    denoised_title_label.config(text="已去雜訊圖片")
+    denoised_title_label.config(text="去噪圖片")
 
     global processed_image
     processed_image = denoised_img
