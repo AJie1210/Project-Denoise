@@ -1,4 +1,3 @@
-# Denoise
 
 import os
 import glob
@@ -376,23 +375,3 @@ def plot_generated_images(generator, dataset, num_images=5, epoch=None):
             plt.show()
 
 plot_generated_images(generator, val_dataset, num_images=5)
-
-# 將最佳模型權重存為 .h5
-print("將最佳模型權重另存為 .h5 檔案...")
-generator.set_weights(best_generator_weights)
-discriminator.set_weights(best_discriminator_weights)
-generator.save('best_generator_model.h5')
-discriminator.save('best_discriminator_model.h5')
-print("儲存完成！")
-------------------------------------------------------------------------------------------------
-
-第 36 個 Epoch 花費時間：569.28 秒
-訓練生成器損失：14.9485, 訓練 MSE：0.0035
-驗證生成器損失：18.3646, 驗證 MSE：0.0036
-驗證損失未改善，早停計數：5/5
-
-
-第 34 個 Epoch 花費時間：576.65 秒
-訓練生成器損失：7.1684, 訓練 MSE：0.0013
-驗證生成器損失：10.5194, 驗證 MSE：0.0014
-驗證損失未改善，早停計數：5/5

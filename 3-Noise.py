@@ -21,7 +21,7 @@ def add_noise(image):
     elif noise_type == 'salt_pepper':
         # 隨機選擇鹽胡椒雜訊強度
         s_vs_p = 0.5
-        amount = random.uniform(0.001, 0.01)  # 調整鹽胡椒雜訊量的範圍
+        amount = random.uniform(0.001, 0.03)  # 調整鹽胡椒雜訊量的範圍
         noisy_image = np.copy(image)
         
         # 添加鹽雜訊
@@ -36,7 +36,7 @@ def add_noise(image):
 
     else: # uniform noise
         # 隨機選擇均勻分佈雜訊強度
-        noise_level = random.randint(5, 30)  # 調整此範圍決定雜訊幅度
+        noise_level = random.randint(0, 30)  # 調整此範圍決定雜訊幅度
         # 在 [-noise_level, noise_level] 區間內產生均勻分佈雜訊
         uniform_noise = np.random.randint(-noise_level, noise_level+1, image.shape).astype(np.int16)
         noisy_image = image.astype(np.int16) + uniform_noise
@@ -45,10 +45,10 @@ def add_noise(image):
     return noisy_image
 
 # 指定資料夾路徑
-# input_folder = 'D:\\Flicker2K\\Grayscale'
-# output_folder = 'D:\\Flicker2K\\Noise'
-input_folder = 'D:\\Flicker2K\\DenoiseImage\\OriginalImages'
-output_folder = 'D:\\Flicker2K\\DenoiseImage\\NoisyImages'
+input_folder = 'D:\\Flicker2K\\Grayscale'
+output_folder = 'D:\\Flicker2K\\Noise'
+# input_folder = 'D:\\Flicker2K\\DenoiseImage\\OriginalImages'
+# output_folder = 'D:\\Flicker2K\\DenoiseImage\\NoisyImages'
 
 # 創建輸出資料夾（如果不存在）
 if not os.path.exists(output_folder):
