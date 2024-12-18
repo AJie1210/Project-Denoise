@@ -316,19 +316,21 @@ def plot_losses(train_gen_losses, val_gen_losses, train_mse_losses, val_mse_loss
     epochs_range = range(1, len(train_gen_losses) + 1)
     plt.figure(figsize=(12, 5))
 
+    # Plot Generator Loss
     plt.subplot(1, 2, 1)
-    plt.plot(epochs_range, train_gen_losses, label='訓練生成器損失')
-    plt.plot(epochs_range, val_gen_losses, label='驗證生成器損失')
-    plt.title('生成器損失')
+    plt.plot(epochs_range, train_gen_losses, label='Training Generator Loss')
+    plt.plot(epochs_range, val_gen_losses, label='Validation Generator Loss')
+    plt.title('Generator Loss')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
     plt.legend()
     plt.grid(True)
 
+    # Plot Mean Squared Error (MSE)
     plt.subplot(1, 2, 2)
-    plt.plot(epochs_range, train_mse_losses, label='訓練 MSE')
-    plt.plot(epochs_range, val_mse_losses, label='驗證 MSE')
-    plt.title('均方誤差 (MSE)')
+    plt.plot(epochs_range, train_mse_losses, label='Training MSE')
+    plt.plot(epochs_range, val_mse_losses, label='Validation MSE')
+    plt.title('Mean Squared Error (MSE)')
     plt.xlabel('Epochs')
     plt.ylabel('MSE')
     plt.legend()
@@ -338,6 +340,7 @@ def plot_losses(train_gen_losses, val_gen_losses, train_mse_losses, val_mse_loss
     plt.savefig('training_validation_losses.png')
     plt.show()
 
+# Call the function to plot the losses
 plot_losses(train_gen_losses, val_gen_losses, train_mse_losses, val_mse_losses)
 
 # 12. 可視化訓練結果
@@ -358,17 +361,17 @@ def plot_generated_images(generator, dataset, num_images=5, epoch=None):
 
             plt.subplot(1, 3, 1)
             plt.imshow(noisy_img, cmap='gray')
-            plt.title("雜訊圖像")
+            plt.title("Noisy Image")
             plt.axis('off')
 
             plt.subplot(1, 3, 2)
             plt.imshow(denoised_img, cmap='gray')
-            plt.title("去雜訊後圖像")
+            plt.title("Denoised Image")
             plt.axis('off')
 
             plt.subplot(1, 3, 3)
             plt.imshow(clean_img, cmap='gray')
-            plt.title("清晰圖像")
+            plt.title("Clean Image")
             plt.axis('off')
 
             plt.suptitle(f'PSNR: {psnr:.2f} dB, SSIM: {ssim:.4f}, MSE: {mse:.4f}')

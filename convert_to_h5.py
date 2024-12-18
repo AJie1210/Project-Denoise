@@ -3,7 +3,7 @@ import tensorflow as tf
 from tensorflow.keras import layers, Model
 
 # 設置固定權重檔案路徑和輸出路徑
-CHECKPOINT_PREFIX = 'D:\\GitHub\\Denoise\\training_checkpoints\\generator_epoch_34'
+CHECKPOINT_PREFIX = 'D:\\GitHub\\Denoise\\training_checkpoints\\generator_epoch_39'
 OUTPUT_FILE = 'D:\\GitHub\\Denoise\\best_generator_model.h5'
 
 # 定義多尺度卷積塊（與訓練時相同）

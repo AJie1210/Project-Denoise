@@ -1,4 +1,3 @@
-
 import os
 import glob
 import numpy as np
@@ -127,10 +126,13 @@ discriminator = discriminator_model()
 dummy_input = tf.ones((1,256,256,1))
 _ = generator(dummy_input, training=False)
 
-print("劃分資料集為訓練集和驗證集...")
-X_train, X_val, y_train, y_val = train_test_split(noisy_images, clean_images, test_size=0.15, random_state=42)
+print("劃分資料集為訓練集、驗證集和測試集...")
+# 將資料劃分為訓練集、驗證集和測試集 (70% 訓練, 15% 驗證, 15% 測試)
+X_train, X_temp, y_train, y_temp = train_test_split(noisy_images, clean_images, test_size=0.30, random_state=42)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
 print(f"訓練集大小：{X_train.shape[0]} 張圖像")
 print(f"驗證集大小：{X_val.shape[0]} 張圖像")
+print(f"測試集大小：{X_test.shape[0]} 張圖像")
 
 # 6. 建立 TensorFlow Dataset
 batch_size = 8
@@ -145,6 +147,7 @@ def create_dataset(noisy, clean, batch_size=8, shuffle=True):
 
 train_dataset = create_dataset(X_train, y_train, batch_size=batch_size, shuffle=True)
 val_dataset = create_dataset(X_val, y_val, batch_size=batch_size, shuffle=False)
+test_dataset = create_dataset(X_test, y_test, batch_size=batch_size, shuffle=False)
 
 # 7. 定義感知損失（使用 VGG19）
 print("定義感知損失...")
@@ -313,6 +316,7 @@ def plot_losses(train_gen_losses, val_gen_losses, train_mse_losses, val_mse_loss
     epochs_range = range(1, len(train_gen_losses) + 1)
     plt.figure(figsize=(12, 5))
 
+    # Plot Generator Loss
     plt.subplot(1, 2, 1)
     plt.plot(epochs_range, train_gen_losses, label='Training Generator Loss')
     plt.plot(epochs_range, val_gen_losses, label='Validation Generator Loss')
@@ -322,6 +326,7 @@ def plot_losses(train_gen_losses, val_gen_losses, train_mse_losses, val_mse_loss
     plt.legend()
     plt.grid(True)
 
+    # Plot Mean Squared Error (MSE)
     plt.subplot(1, 2, 2)
     plt.plot(epochs_range, train_mse_losses, label='Training MSE')
     plt.plot(epochs_range, val_mse_losses, label='Validation MSE')
@@ -335,6 +340,7 @@ def plot_losses(train_gen_losses, val_gen_losses, train_mse_losses, val_mse_loss
     plt.savefig('training_validation_losses.png')
     plt.show()
 
+# Call the function to plot the losses
 plot_losses(train_gen_losses, val_gen_losses, train_mse_losses, val_mse_losses)
 
 # 12. 可視化訓練結果
@@ -355,17 +361,17 @@ def plot_generated_images(generator, dataset, num_images=5, epoch=None):
 
             plt.subplot(1, 3, 1)
             plt.imshow(noisy_img, cmap='gray')
-            plt.title("Noisy")
+            plt.title("Noisy Image")
             plt.axis('off')
 
             plt.subplot(1, 3, 2)
             plt.imshow(denoised_img, cmap='gray')
-            plt.title("Denoised")
+            plt.title("Denoised Image")
             plt.axis('off')
 
             plt.subplot(1, 3, 3)
             plt.imshow(clean_img, cmap='gray')
-            plt.title("Clean")
+            plt.title("Clean Image")
             plt.axis('off')
 
             plt.suptitle(f'PSNR: {psnr:.2f} dB, SSIM: {ssim:.4f}, MSE: {mse:.4f}')
@@ -375,3 +381,45 @@ def plot_generated_images(generator, dataset, num_images=5, epoch=None):
             plt.show()
 
 plot_generated_images(generator, val_dataset, num_images=5)
+
+# 13. 定義評估指標計算函數
+def evaluate_metrics(generator, dataset):
+    psnr_list = []
+    ssim_list = []
+    mse_list = []
+    for noisy_batch, clean_batch in dataset:
+        generated_images = generator(noisy_batch, training=False)
+        for i in range(generated_images.shape[0]):
+            denoised = generated_images[i].numpy().squeeze()
+            clean = clean_batch[i].numpy().squeeze()
+            psnr = compare_psnr(clean, denoised, data_range=1.0)
+            ssim = compare_ssim(clean, denoised, data_range=1.0)
+            mse_val = mean_squared_error(clean.flatten(), denoised.flatten())
+            psnr_list.append(psnr)
+            ssim_list.append(ssim)
+            mse_list.append(mse_val)
+    avg_psnr = np.mean(psnr_list)
+    avg_ssim = np.mean(ssim_list)
+    avg_mse = np.mean(mse_list)
+    return avg_psnr, avg_ssim, avg_mse
+
+# 14. 計算並顯示驗證集和測試集的平均 PSNR, SSIM, MSE
+print("計算驗證集和測試集的平均 PSNR, SSIM, MSE...")
+avg_val_psnr, avg_val_ssim, avg_val_mse = evaluate_metrics(generator, val_dataset)
+avg_test_psnr, avg_test_ssim, avg_test_mse = evaluate_metrics(generator, test_dataset)
+
+print("\n模型訓練完成！以下是驗證集和測試集的平均評估指標：")
+print(f"驗證集 - 平均 PSNR: {avg_val_psnr:.2f} dB")
+print(f"驗證集 - 平均 SSIM: {avg_val_ssim:.4f}")
+print(f"驗證集 - 平均 MSE: {avg_val_mse:.4f}")
+
+print(f"測試集 - 平均 PSNR: {avg_test_psnr:.2f} dB")
+print(f"測試集 - 平均 SSIM: {avg_test_ssim:.4f}")
+print(f"測試集 - 平均 MSE: {avg_test_mse:.4f}")
+--------------------------------------------------------------------------------
+Testset 1(5 Images)
+平均 PSNR: 30.12 dB
+平均 SSIM: 0.8789
+平均 MSE: 0.0012
+--------------------------------------------------------------------------------
+Testset 2(5 Images)
