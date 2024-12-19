@@ -34,8 +34,8 @@ def load_images_from_folder(folder, target_size=(256, 256)):
     return np.array(images), [os.path.basename(f) for f in filenames]
 
 # 資料夾路徑（請根據需要自行修改）
-Gray_images_folder = 'D:\\Flicker2K\\Grayscale'
-noisy_images_folder = 'D:\\Flicker2K\\Noise'
+Gray_images_folder = 'D:\\Flicker2K\\archive\\Grayscale'
+noisy_images_folder = 'D:\\Flicker2K\\archive\\Noise'
 
 print("開始載入清晰圖像...")
 clean_images, clean_filenames = load_images_from_folder(Gray_images_folder)
