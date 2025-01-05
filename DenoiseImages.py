@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow.keras import layers, Model
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
+from tensorflow.keras.utils import load_img, img_to_array
 from skimage.metrics import peak_signal_noise_ratio as compare_psnr
 from skimage.metrics import structural_similarity as compare_ssim
 from sklearn.metrics import mean_squared_error
@@ -60,7 +60,7 @@ def unet_generator(input_size=(256, 256, 1)):
 
 print("加載生成器模型...")
 generator = unet_generator()
-model_weights = 'D:\\GitHub\\Denoise\\training_checkpoints\\generator_epoch_39' # 替換為您的權重檔路徑
+model_weights = 'C:\\Users\\Wayne\\Documents\\GitHub\\Denoise-Project\\training_checkpoints\\generator_epoch_32' # 替換為您的權重檔路徑
 # model_weights = 'best_generator_model.h5'
 generator.load_weights(model_weights)
 print(f"已加載模型權重：{model_weights}")
@@ -80,9 +80,10 @@ def load_images_from_folder(folder, target_size=(256, 256)):
             print(f"錯誤：無法加載圖像 {filename}。錯誤信息：{e}")
     return np.array(images), filenames
 
-noisy_folder = 'D:\\Flicker2K\\DenoiseImage\\NoisyImages'
-original_folder = 'D:\\Flicker2K\\DenoiseImage\\OriginalImages'
-denoised_output_folder = 'D:\\Flicker2K\\DenoiseImage\\DenoisedImages'
+
+original_folder = 'D:\\GitHub\\Grayscale'
+noisy_folder = 'D:\\GitHub\\Noise'
+denoised_output_folder = 'D:\\GitHub\\Denoise'
 
 if not os.path.exists(denoised_output_folder):
     os.makedirs(denoised_output_folder)

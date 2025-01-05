@@ -34,8 +34,8 @@ def load_images_from_folder(folder, target_size=(256, 256)):
     return np.array(images), [os.path.basename(f) for f in filenames]
 
 # 資料夾路徑（請根據需要自行修改）
-Gray_images_folder = 'D:\\Flicker2K\\Grayscale'
-noisy_images_folder = 'D:\\Flicker2K\\Noise'
+Gray_images_folder = 'D:\\Flicker2K\\archive\\Grayscale'
+noisy_images_folder = 'D:\\Flicker2K\\archive\\Noise'
 
 print("開始載入清晰圖像...")
 clean_images, clean_filenames = load_images_from_folder(Gray_images_folder)
@@ -135,7 +135,7 @@ print(f"驗證集大小：{X_val.shape[0]} 張圖像")
 print(f"測試集大小：{X_test.shape[0]} 張圖像")
 
 # 6. 建立 TensorFlow Dataset
-batch_size = 8
+batch_size = 4
 epochs = 100
 
 def create_dataset(noisy, clean, batch_size=8, shuffle=True):
@@ -416,10 +416,3 @@ print(f"驗證集 - 平均 MSE: {avg_val_mse:.4f}")
 print(f"測試集 - 平均 PSNR: {avg_test_psnr:.2f} dB")
 print(f"測試集 - 平均 SSIM: {avg_test_ssim:.4f}")
 print(f"測試集 - 平均 MSE: {avg_test_mse:.4f}")
---------------------------------------------------------------------------------
-Testset 1(5 Images)
-平均 PSNR: 30.12 dB
-平均 SSIM: 0.8789
-平均 MSE: 0.0012
---------------------------------------------------------------------------------
-Testset 2(5 Images)

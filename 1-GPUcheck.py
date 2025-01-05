@@ -7,5 +7,5 @@ print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('
 print("Tensorflow 版本:", tf.__version__)
 print("PyTorch 版本:", torch.__version__)
 print("PyTorch 使用的 CUDA 版本:", torch.version.cuda)
-print(torch.backends.cudnn.version())
+print("cuDNN 版本:",torch.backends.cudnn.version())
 print("CUDA 可用性:", torch.cuda.is_available())

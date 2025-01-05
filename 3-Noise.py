@@ -48,8 +48,8 @@ def add_noise(image):
     return noisy_image
 
 # 資料夾路徑
-input_folder = 'D:\\Flicker2K\\archive\\Grayscale'
-output_folder = 'D:\\Flicker2K\\archive\\Noise'
+input_folder = 'D:\\GitHub\\Grayscale'
+output_folder = 'D:\\GitHub\\Noise'
 
 # 創建輸出資料夾（如果不存在）
 if not os.path.exists(output_folder):
