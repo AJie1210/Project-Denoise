@@ -135,7 +135,7 @@ print(f"驗證集大小：{X_val.shape[0]} 張圖像")
 print(f"測試集大小：{X_test.shape[0]} 張圖像")
 
 # 6. 建立 TensorFlow Dataset
-batch_size = 8
+batch_size = 4
 epochs = 100
 
 def create_dataset(noisy, clean, batch_size=8, shuffle=True):
@@ -344,7 +344,7 @@ def plot_losses(train_gen_losses, val_gen_losses, train_mse_losses, val_mse_loss
 plot_losses(train_gen_losses, val_gen_losses, train_mse_losses, val_mse_losses)
 
 # 12. 可視化訓練結果
-def plot_generated_images(generator, dataset, num_images=5, epoch=None):
+def plot_generated_images(generator, dataset, num_images=4, epoch=None):
     for noisy_images, clean_images in dataset.take(1):
         generated_images = generator.predict(noisy_images[:num_images])
 
