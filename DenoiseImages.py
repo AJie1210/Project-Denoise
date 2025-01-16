@@ -83,7 +83,7 @@ def load_images_from_folder(folder, target_size=(256, 256)):
 
 original_folder = 'D:\\GitHub\\Grayscale'
 noisy_folder = 'D:\\GitHub\\Noise'
-denoised_output_folder = 'D:\\GitHub\\Denoise'
+denoised_output_folder = 'C:\\Users\\Wayne\\Documents\\GitHub\\Denoise-Project\\Visualization_result'
 
 if not os.path.exists(denoised_output_folder):
     os.makedirs(denoised_output_folder)
@@ -107,7 +107,7 @@ mse_list = []
 num_images_to_visualize = 5
 
 # 新增可視化存檔路徑
-visualization_save_folder = 'D:\\GitHub\\Denoise\\Visualization_result'
+visualization_save_folder = 'C:\\Users\\Wayne\\Documents\\GitHub\\Denoise-Project\\Visualization_result'
 if not os.path.exists(visualization_save_folder):
     os.makedirs(visualization_save_folder)
 

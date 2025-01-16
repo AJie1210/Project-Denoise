@@ -17,7 +17,7 @@ def add_noise(image):
     if noise_type == 'gaussian':
         # 高斯雜訊
         mean = 0
-        sigma = random.randint(5, 30)
+        sigma = random.randint(10, 50)
         gauss = np.random.normal(mean, sigma, image.shape).astype(np.int16)
         noisy_image = image.astype(np.int16) + gauss
         noisy_image = np.clip(noisy_image, 0, 255).astype(np.uint8)
@@ -25,7 +25,7 @@ def add_noise(image):
     elif noise_type == 'salt_pepper':
         # 椒鹽雜訊
         s_vs_p = 0.5
-        amount = random.uniform(0.001, 0.03)
+        amount = random.uniform(0.01, 0.05)
         noisy_image = np.copy(image)
         
         # 添加鹽雜訊
@@ -40,7 +40,7 @@ def add_noise(image):
 
     else:  # uniform noise
         # 均勻分佈雜訊
-        noise_level = random.randint(0, 30)
+        noise_level = random.randint(10, 40)
         uniform_noise = np.random.randint(-noise_level, noise_level + 1, image.shape).astype(np.int16)
         noisy_image = image.astype(np.int16) + uniform_noise
         noisy_image = np.clip(noisy_image, 0, 255).astype(np.uint8)
