@@ -1,0 +1,2 @@
+model_checkpoint_path: "discriminator_epoch_34"
+all_model_checkpoint_paths: "discriminator_epoch_34"

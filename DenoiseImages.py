@@ -60,7 +60,7 @@ def unet_generator(input_size=(256, 256, 1)):
 
 print("加載生成器模型...")
 generator = unet_generator()
-model_weights = 'C:\\Users\\Wayne\\Documents\\GitHub\\Denoise-Project\\training_checkpoints\\generator_epoch_30' # 替換為您的權重檔路徑
+model_weights = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\training_checkpoints\\generator_epoch_34' # 替換為您的權重檔路徑
 # model_weights = 'best_generator_model.h5'
 generator.load_weights(model_weights)
 print(f"已加載模型權重：{model_weights}")
@@ -81,9 +81,9 @@ def load_images_from_folder(folder, target_size=(256, 256)):
     return np.array(images), filenames
 
 
-original_folder = 'D:\\Denoise\\Grayscale'
-noisy_folder = 'D:\\Denoise\\Noise'
-denoised_output_folder = 'C:\Users\ytes6\OneDrive\文件\GitHub\Project-Denoise\Visualization_result'
+original_folder = 'D:\\Denoise\\Final_TestImage(Grayscale)'
+noisy_folder = 'D:\\Denoise\\Final_TestImage(Noise Image)'
+denoised_output_folder = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\Visualization_result'
 
 if not os.path.exists(denoised_output_folder):
     os.makedirs(denoised_output_folder)
@@ -107,7 +107,7 @@ mse_list = []
 num_images_to_visualize = 5
 
 # 新增可視化存檔路徑
-visualization_save_folder = 'C:\Users\ytes6\OneDrive\文件\GitHub\Project-Denoise\Visualization_result'
+visualization_save_folder = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\Visualization_result'
 if not os.path.exists(visualization_save_folder):
     os.makedirs(visualization_save_folder)
 

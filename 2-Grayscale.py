@@ -1,8 +1,11 @@
 from PIL import Image
 import os
 
-input_dir = 'D:\Denoise\Flickr2K'
-output_dir = 'D:\Denoise\Grayscale'
+# input_dir = 'D:\Denoise\Flickr2K'
+# output_dir = 'D:\Denoise\Grayscale'
+
+input_dir = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\Final_TestImage(Clean Image)'
+output_dir = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\Final_TestImage(Grayscale)'
 
 def convert_to_grayscale(input_dir, output_dir):
     if not os.path.exists(output_dir):

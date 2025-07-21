@@ -3,7 +3,7 @@ import glob
 import numpy as np
 import tensorflow as tf
 from keras import layers, Model
-from keras.preprocessing.image import load_img, img_to_array
+from keras.utils import load_img, img_to_array
 import matplotlib.pyplot as plt
 
 def multi_scale_conv_block(inputs, filters):
@@ -55,7 +55,7 @@ def unet_generator(input_size=(256, 256, 1)):
 
 # 載入已訓練好的生成器權重
 generator = unet_generator()
-model_weights = 'C:\\Users\\Wayne\\Documents\\GitHub\\Denoise-Project\\training_checkpoints\\generator_epoch_30'
+model_weights = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\training_checkpoints\\generator_epoch_34'
 # model_weights = 'best_generator_model.h5'
 generator.load_weights(model_weights)  # 請替換為您的實際權重檔路徑
 
@@ -71,16 +71,16 @@ def load_images_from_folder(folder, target_size=(256, 256)):
     return np.array(images), filenames
 
 # 指定雜訊圖像資料夾
-noisy_folder = 'D:\\GitHub\\Noise'  # 請根據實際狀況修改
+noisy_folder = 'D:\\Denoise\\Final_TestImage(Noise Image)'  # 請根據實際狀況修改
 noisy_images, noisy_filenames = load_images_from_folder(noisy_folder)
 print(f"共加載 {len(noisy_images)} 張雜訊圖像，開始去雜訊...")
 
-denoised_output_folder = 'C:\\Users\\Wayne\\Documents\\GitHub\\Denoise-Project\\Visualization_result_no'
+denoised_output_folder = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\Visualization_result_no'
 if not os.path.exists(denoised_output_folder):
     os.makedirs(denoised_output_folder)
 
 # 新增一個資料夾來儲存可視化結果
-visualization_output_folder = 'C:\\Users\\Wayne\\Documents\\GitHub\\Denoise-Project\\Visualization_result_no'
+visualization_output_folder = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\Visualization_result_no'
 if not os.path.exists(visualization_output_folder):
     os.makedirs(visualization_output_folder)
 

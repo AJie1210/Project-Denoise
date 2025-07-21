@@ -44,8 +44,11 @@ def add_noise(image):
     return noisy_image
 
 # 資料夾路徑
-input_folder = 'D:\\Denoise\\Grayscale'
-output_folder = 'D:\\Denoise\\Noise'
+# input_folder = 'D:\\Denoise\\Grayscale'
+# output_folder = 'D:\\Denoise\\Noise'
+
+input_folder = 'D:\\Denoise\\Final_TestImage(Grayscale)'
+output_folder = 'D:\\Denoise\\Final_TestImage(Noise Image)'
 
 # 創建輸出資料夾（如果不存在）
 if not os.path.exists(output_folder):

@@ -136,7 +136,7 @@ print(f"測試集大小：{X_test.shape[0]} 張圖像")
 
 # 6. 建立 TensorFlow Dataset
 batch_size = 4
-epochs = 50
+epochs = 100
 
 def create_dataset(noisy, clean, batch_size=8, shuffle=True):
     dataset = tf.data.Dataset.from_tensor_slices((noisy, clean))
@@ -161,7 +161,7 @@ mse_loss = tf.keras.losses.MeanSquaredError()
 generator_optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
 discriminator_optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
 
-lambda_value = 10.0
+lambda_value = 20.0
 
 # 9. 定義訓練和驗證步驟
 @tf.function
@@ -234,7 +234,7 @@ train_mse_losses = []
 val_gen_losses = []
 val_mse_losses = []
 
-patience = 5
+patience = 10
 best_val_loss = np.inf
 patience_counter = 0
 
