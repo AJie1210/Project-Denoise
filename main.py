@@ -136,7 +136,7 @@ print(f"測試集大小：{X_test.shape[0]} 張圖像")
 
 # 6. 建立 TensorFlow Dataset
 batch_size = 4
-epochs = 100
+epochs = 50
 
 def create_dataset(noisy, clean, batch_size=8, shuffle=True):
     dataset = tf.data.Dataset.from_tensor_slices((noisy, clean))
