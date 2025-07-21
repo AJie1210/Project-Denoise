@@ -161,7 +161,7 @@ mse_loss = tf.keras.losses.MeanSquaredError()
 generator_optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
 discriminator_optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
 
-lambda_value = 20.0
+lambda_value = 50.0
 
 # 9. 定義訓練和驗證步驟
 @tf.function
