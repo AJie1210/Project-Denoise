@@ -3,9 +3,9 @@ import glob
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from tensorflow.keras import layers, Model
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
-from tensorflow.keras.applications import VGG19
+from keras import layers, Model
+from keras.utils import load_img, img_to_array
+from keras.applications import VGG19
 from sklearn.model_selection import train_test_split
 import time
 
@@ -33,9 +33,9 @@ def load_images_from_folder(folder, target_size=(256, 256)):
             print(f"錯誤：無法載入圖像 {filename}。錯誤訊息：{e}")
     return np.array(images), [os.path.basename(f) for f in filenames]
 
-# 資料夾路徑（請根據需要自行修改）
-Gray_images_folder = 'D:\\Flicker2K\\archive\\Grayscale'
-noisy_images_folder = 'D:\\Flicker2K\\archive\\Noise'
+# 資料夾路徑
+Gray_images_folder = 'D:\\Denoise\\Grayscale'
+noisy_images_folder = 'D:\\Denoise\\Noise'
 
 print("開始載入清晰圖像...")
 clean_images, clean_filenames = load_images_from_folder(Gray_images_folder)
@@ -408,7 +408,7 @@ print("計算驗證集和測試集的平均 PSNR, SSIM, MSE...")
 avg_val_psnr, avg_val_ssim, avg_val_mse = evaluate_metrics(generator, val_dataset)
 avg_test_psnr, avg_test_ssim, avg_test_mse = evaluate_metrics(generator, test_dataset)
 
-print("\n模型訓練完成！以下是驗證集和測試集的平均評估指標：")
+print("\n模型訓練完成。以下是驗證集和測試集的平均評估指標：")
 print(f"驗證集 - 平均 PSNR: {avg_val_psnr:.2f} dB")
 print(f"驗證集 - 平均 SSIM: {avg_val_ssim:.4f}")
 print(f"驗證集 - 平均 MSE: {avg_val_mse:.4f}")

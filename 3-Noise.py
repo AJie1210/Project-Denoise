@@ -2,15 +2,11 @@ import cv2
 import numpy as np
 import os
 import random
-from tqdm import tqdm  # 需要安裝 tqdm：pip install tqdm
+from tqdm import tqdm
 
 # 定義添加雜訊的函數
 def add_noise(image):
-    """
-    向圖像添加隨機噪聲。
-    :param image: 輸入的灰階圖像 (numpy array)
-    :return: 含噪聲的圖像
-    """
+
     # 隨機選擇雜訊類型
     noise_type = random.choice(['gaussian', 'salt_pepper', 'uniform'])
     
@@ -48,8 +44,8 @@ def add_noise(image):
     return noisy_image
 
 # 資料夾路徑
-input_folder = 'D:\\GitHub\\Grayscale'
-output_folder = 'D:\\GitHub\\Noise'
+input_folder = 'D:\\Denoise\\Grayscale'
+output_folder = 'D:\\Denoise\\Noise'
 
 # 創建輸出資料夾（如果不存在）
 if not os.path.exists(output_folder):

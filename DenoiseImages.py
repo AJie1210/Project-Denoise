@@ -3,8 +3,8 @@ import glob
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from tensorflow.keras import layers, Model
-from tensorflow.keras.utils import load_img, img_to_array
+from keras import layers, Model
+from keras.utils import load_img, img_to_array
 from skimage.metrics import peak_signal_noise_ratio as compare_psnr
 from skimage.metrics import structural_similarity as compare_ssim
 from sklearn.metrics import mean_squared_error

@@ -2,8 +2,8 @@ import os
 import glob
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras import layers, Model
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
+from keras import layers, Model
+from keras.preprocessing.image import load_img, img_to_array
 import matplotlib.pyplot as plt
 
 def multi_scale_conv_block(inputs, filters):

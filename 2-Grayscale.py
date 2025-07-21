@@ -1,8 +1,8 @@
 from PIL import Image
 import os
 
-input_dir = 'D:\\GitHub\\Original'
-output_dir = 'D:\\GitHub\\Grayscale'
+input_dir = 'D:\Denoise\Flickr2K'
+output_dir = 'D:\Denoise\Grayscale'
 
 def convert_to_grayscale(input_dir, output_dir):
     if not os.path.exists(output_dir):

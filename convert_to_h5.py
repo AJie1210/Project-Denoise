@@ -1,6 +1,7 @@
 import os
 import tensorflow as tf
-from tensorflow.keras import layers, Model
+from keras import layers, Model
+# from tensorflow.keras import layers, Model
 
 # 設置固定權重檔案路徑和輸出路徑
 CHECKPOINT_PREFIX = 'D:\\GitHub\\Denoise\\training_checkpoints\\generator_epoch_39'
