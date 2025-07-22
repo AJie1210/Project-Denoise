@@ -4,8 +4,8 @@ from keras import layers, Model
 # from tensorflow.keras import layers, Model
 
 # 設置固定權重檔案路徑和輸出路徑
-CHECKPOINT_PREFIX = 'D:\\GitHub\\Denoise\\training_checkpoints\\generator_epoch_39'
-OUTPUT_FILE = 'D:\\GitHub\\Denoise\\best_generator_model.h5'
+CHECKPOINT_PREFIX = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\training_checkpoints\\generator_epoch_38'
+OUTPUT_FILE = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\best_generator_model.h5'
 
 # 定義多尺度卷積塊（與訓練時相同）
 def multi_scale_conv_block(inputs, filters):
