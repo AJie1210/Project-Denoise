@@ -55,7 +55,7 @@ def unet_generator(input_size=(256, 256, 1)):
 
 # 載入已訓練好的生成器權重
 generator = unet_generator()
-model_weights = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\training_checkpoints\\generator_epoch_34'
+model_weights = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\training_checkpoints\\generator_epoch_38'
 # model_weights = 'best_generator_model.h5'
 generator.load_weights(model_weights)  # 請替換為您的實際權重檔路徑
 
