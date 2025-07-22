@@ -14,7 +14,6 @@ from skimage.metrics import peak_signal_noise_ratio as compare_psnr
 from skimage.metrics import structural_similarity as compare_ssim
 from sklearn.metrics import mean_squared_error
 
-# 隨機種子確保結果盡可能可重現
 np.random.seed(42)
 tf.random.set_seed(42)
 
