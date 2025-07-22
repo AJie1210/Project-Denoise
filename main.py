@@ -9,16 +9,15 @@ from keras.applications import VGG19
 from sklearn.model_selection import train_test_split
 import time
 
-# 匯入評估指標函數
+# 評估指標函數
 from skimage.metrics import peak_signal_noise_ratio as compare_psnr
 from skimage.metrics import structural_similarity as compare_ssim
 from sklearn.metrics import mean_squared_error
 
-# 設定隨機種子確保結果可重現
+# 隨機種子確保結果盡可能可重現
 np.random.seed(42)
 tf.random.set_seed(42)
 
-# 1. 載入資料 (改為256x256)
 def load_images_from_folder(folder, target_size=(256, 256)):
     images = []
     filenames = sorted(glob.glob(os.path.join(folder, '*.png')))
@@ -33,7 +32,6 @@ def load_images_from_folder(folder, target_size=(256, 256)):
             print(f"錯誤：無法載入圖像 {filename}。錯誤訊息：{e}")
     return np.array(images), [os.path.basename(f) for f in filenames]
 
-# 資料夾路徑
 Gray_images_folder = 'D:\\Denoise\\Grayscale'
 noisy_images_folder = 'D:\\Denoise\\Noise'
 
@@ -49,7 +47,7 @@ if len(clean_images) == 0 or len(noisy_images) == 0:
     raise ValueError("資料集中沒有可用的圖像，請檢查資料夾路徑和格式！")
 assert len(clean_images) == len(noisy_images), "清晰圖像和雜訊圖像數量不一致。"
 
-# 2. 建立多尺度卷積塊
+# 建立多尺度卷積塊
 def multi_scale_conv_block(inputs, filters):
     conv_1x1 = layers.Conv2D(filters, (1,1), activation='relu', padding='same')(inputs)
     conv_3x3 = layers.Conv2D(filters, (3,3), activation='relu', padding='same')(inputs)
@@ -57,7 +55,7 @@ def multi_scale_conv_block(inputs, filters):
     concat = layers.Concatenate()([conv_1x1, conv_3x3, conv_5x5])
     return concat
 
-# 3. 建立生成器模型（U-Net 結構 + 多尺度卷積）
+# 建立生成器模型（U-Net 結構 + 多尺度卷積）
 def unet_generator(input_size=(256, 256, 1)):
     inputs = layers.Input(input_size)
 
@@ -98,7 +96,7 @@ def unet_generator(input_size=(256, 256, 1)):
     model = Model(inputs=[inputs], outputs=[outputs])
     return model
 
-# 4. 建立判別器模型(256x256)
+# 建立判別器模型(256x256)
 def discriminator_model(input_shape=(256,256,1)):
     inputs = layers.Input(shape=input_shape)
     x = layers.Conv2D(64, (3,3), strides=2, padding='same')(inputs)
@@ -127,14 +125,14 @@ dummy_input = tf.ones((1,256,256,1))
 _ = generator(dummy_input, training=False)
 
 print("劃分資料集為訓練集、驗證集和測試集...")
-# 將資料劃分為訓練集、驗證集和測試集 (70% 訓練, 15% 驗證, 15% 測試)
+# 資料劃分訓練集、驗證集和測試集 (70% 訓練, 15% 驗證, 15% 測試)
 X_train, X_temp, y_train, y_temp = train_test_split(noisy_images, clean_images, test_size=0.30, random_state=42)
 X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
 print(f"訓練集大小：{X_train.shape[0]} 張圖像")
 print(f"驗證集大小：{X_val.shape[0]} 張圖像")
 print(f"測試集大小：{X_test.shape[0]} 張圖像")
 
-# 6. 建立 TensorFlow Dataset
+# 建立 TensorFlow Dataset
 batch_size = 4
 epochs = 100
 
@@ -149,13 +147,13 @@ train_dataset = create_dataset(X_train, y_train, batch_size=batch_size, shuffle=
 val_dataset = create_dataset(X_val, y_val, batch_size=batch_size, shuffle=False)
 test_dataset = create_dataset(X_test, y_test, batch_size=batch_size, shuffle=False)
 
-# 7. 定義感知損失（使用 VGG19）
+# 定義感知損失（使用 VGG19）
 print("定義感知損失...")
 vgg = VGG19(include_top=False, weights='imagenet', input_shape=(256, 256, 3))
 vgg_model = Model(inputs=vgg.input, outputs=vgg.get_layer('block3_conv3').output)
 vgg_model.trainable = False
 
-# 8. 定義損失函數和優化器
+# 定義損失函數和優化器
 binary_cross_entropy = tf.keras.losses.BinaryCrossentropy(from_logits=False)
 mse_loss = tf.keras.losses.MeanSquaredError()
 generator_optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
@@ -163,7 +161,7 @@ discriminator_optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
 
 lambda_value = 50.0
 
-# 9. 定義訓練和驗證步驟
+# 定義訓練和驗證步驟
 @tf.function
 def train_step(noisy_images, clean_images):
     with tf.GradientTape() as disc_tape:
@@ -216,7 +214,7 @@ def val_step(noisy_images, clean_images):
 
     return gen_loss, adv_loss, perc_loss, mse
 
-# 10. 開始訓練
+# 開始訓練
 print("開始訓練模型...")
 EPOCHS = epochs
 
@@ -311,12 +309,12 @@ for epoch in range(EPOCHS):
             discriminator.set_weights(best_discriminator_weights)
             break
 
-# 11. 繪製損失曲線
+# 繪製損失曲線
 def plot_losses(train_gen_losses, val_gen_losses, train_mse_losses, val_mse_losses):
     epochs_range = range(1, len(train_gen_losses) + 1)
     plt.figure(figsize=(12, 5))
 
-    # Plot Generator Loss
+    # 繪製 Generator Loss
     plt.subplot(1, 2, 1)
     plt.plot(epochs_range, train_gen_losses, label='Training Generator Loss')
     plt.plot(epochs_range, val_gen_losses, label='Validation Generator Loss')
@@ -326,7 +324,7 @@ def plot_losses(train_gen_losses, val_gen_losses, train_mse_losses, val_mse_loss
     plt.legend()
     plt.grid(True)
 
-    # Plot Mean Squared Error (MSE)
+    # 繪製 Mean Squared Error (MSE)
     plt.subplot(1, 2, 2)
     plt.plot(epochs_range, train_mse_losses, label='Training MSE')
     plt.plot(epochs_range, val_mse_losses, label='Validation MSE')
@@ -340,10 +338,10 @@ def plot_losses(train_gen_losses, val_gen_losses, train_mse_losses, val_mse_loss
     plt.savefig('training_validation_losses.png')
     plt.show()
 
-# Call the function to plot the losses
+# 繪製損失圖
 plot_losses(train_gen_losses, val_gen_losses, train_mse_losses, val_mse_losses)
 
-# 12. 可視化訓練結果
+# 可視化訓練結果
 def plot_generated_images(generator, dataset, num_images=4, epoch=None):
     for noisy_images, clean_images in dataset.take(1):
         generated_images = generator.predict(noisy_images[:num_images])
@@ -382,7 +380,7 @@ def plot_generated_images(generator, dataset, num_images=4, epoch=None):
 
 plot_generated_images(generator, val_dataset, num_images=5)
 
-# 13. 定義評估指標計算函數
+# 定義評估指標計算函數
 def evaluate_metrics(generator, dataset):
     psnr_list = []
     ssim_list = []
@@ -403,7 +401,7 @@ def evaluate_metrics(generator, dataset):
     avg_mse = np.mean(mse_list)
     return avg_psnr, avg_ssim, avg_mse
 
-# 14. 計算並顯示驗證集和測試集的平均 PSNR, SSIM, MSE
+# 計算並顯示驗證集和測試集的平均 PSNR, SSIM, MSE
 print("計算驗證集和測試集的平均 PSNR, SSIM, MSE...")
 avg_val_psnr, avg_val_ssim, avg_val_mse = evaluate_metrics(generator, val_dataset)
 avg_test_psnr, avg_test_ssim, avg_test_mse = evaluate_metrics(generator, test_dataset)

@@ -24,12 +24,10 @@ def add_noise(image):
         amount = random.uniform(0.01, 0.05)
         noisy_image = np.copy(image)
         
-        # 添加鹽雜訊
         num_salt = int(amount * image.size * s_vs_p)
         coords_salt = [np.random.randint(0, i, num_salt) for i in image.shape]
         noisy_image[tuple(coords_salt)] = 255
         
-        # 添加胡椒雜訊
         num_pepper = int(amount * image.size * (1 - s_vs_p))
         coords_pepper = [np.random.randint(0, i, num_pepper) for i in image.shape]
         noisy_image[tuple(coords_pepper)] = 0
@@ -50,12 +48,12 @@ def add_noise(image):
 input_folder = 'D:\\Denoise\\Final_TestImage(Grayscale)'
 output_folder = 'D:\\Denoise\\Final_TestImage(Noise Image)'
 
-# 創建輸出資料夾（如果不存在）
+# 創建輸出資料夾
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
 # 瀏覽資料夾中的所有圖像並處理
-error_files = []  # 用於記錄處理失敗的文件
+error_files = []
 file_list = [f for f in os.listdir(input_folder) if f.lower().endswith(('.jpg', '.png'))]
 
 for filename in tqdm(file_list, desc="Processing Images", unit="file"):

@@ -53,11 +53,10 @@ def unet_generator(input_size=(256, 256, 1)):
     model = Model(inputs=[inputs], outputs=[outputs])
     return model
 
-# 載入已訓練好的生成器權重
 generator = unet_generator()
 model_weights = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\training_checkpoints\\generator_epoch_38'
 # model_weights = 'best_generator_model.h5'
-generator.load_weights(model_weights)  # 請替換為您的實際權重檔路徑
+generator.load_weights(model_weights)
 
 def load_images_from_folder(folder, target_size=(256, 256)):
     images = []
@@ -70,8 +69,7 @@ def load_images_from_folder(folder, target_size=(256, 256)):
         images.append(img_array)
     return np.array(images), filenames
 
-# 指定雜訊圖像資料夾
-noisy_folder = 'D:\\Denoise\\Final_TestImage(Noise Image)'  # 請根據實際狀況修改
+noisy_folder = 'D:\\Denoise\\Final_TestImage(Noise Image)'
 noisy_images, noisy_filenames = load_images_from_folder(noisy_folder)
 print(f"共加載 {len(noisy_images)} 張雜訊圖像，開始去雜訊...")
 
@@ -79,21 +77,17 @@ denoised_output_folder = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-De
 if not os.path.exists(denoised_output_folder):
     os.makedirs(denoised_output_folder)
 
-# 新增一個資料夾來儲存可視化結果
 visualization_output_folder = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\Visualization_result_no'
 if not os.path.exists(visualization_output_folder):
     os.makedirs(visualization_output_folder)
 
-# 對每張雜訊圖像進行去雜訊並顯示及儲存可視化結果
 for idx in range(len(noisy_images)):
     noisy_img = noisy_images[idx]
     filename = os.path.basename(noisy_filenames[idx])
 
-    # 增加維度 (batch_size, H, W, C)
     noisy_img_input = np.expand_dims(noisy_img, axis=0)
     denoised_img = generator.predict(noisy_img_input)[0]
 
-    # 將結果轉為uint8並保存
     denoised_img_uint8 = (denoised_img * 255).astype(np.uint8)
     if denoised_img_uint8.ndim == 2:
         denoised_img_uint8 = np.expand_dims(denoised_img_uint8, axis=-1)
@@ -101,7 +95,6 @@ for idx in range(len(noisy_images)):
     denoised_img_pil = tf.keras.preprocessing.image.array_to_img(denoised_img_uint8, scale=False)
     denoised_img_pil.save(os.path.join(denoised_output_folder, filename))
 
-    # 顯示去雜訊前後的對照
     plt.figure(figsize=(10,5))
     plt.subplot(1,2,1)
     plt.imshow(noisy_img.squeeze(), cmap='gray')
@@ -113,9 +106,8 @@ for idx in range(len(noisy_images)):
     plt.title("Denoised")
     plt.axis('off')
 
-    # 儲存可視化結果至指定資料夾
     visualization_path = os.path.join(visualization_output_folder, f"visualization_{idx}.png")
     plt.savefig(visualization_path)
     plt.show()
 
-print("去雜訊處理與可視化完成！")
+print("去雜訊處理與可視化完成")

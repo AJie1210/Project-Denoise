@@ -9,7 +9,7 @@ from skimage.metrics import peak_signal_noise_ratio as compare_psnr
 from skimage.metrics import structural_similarity as compare_ssim
 from sklearn.metrics import mean_squared_error
 
-# 1. 定義多尺度卷積塊
+# 定義多尺度卷積塊
 def multi_scale_conv_block(inputs, filters):
     conv_1x1 = layers.Conv2D(filters, (1,1), activation='relu', padding='same')(inputs)
     conv_3x3 = layers.Conv2D(filters, (3,3), activation='relu', padding='same')(inputs)
@@ -17,7 +17,7 @@ def multi_scale_conv_block(inputs, filters):
     concat = layers.Concatenate()([conv_1x1, conv_3x3, conv_5x5])
     return concat
 
-# 2. 定義生成器模型
+# 定義生成器模型
 def unet_generator(input_size=(256, 256, 1)):
     inputs = layers.Input(input_size)
 
@@ -60,12 +60,11 @@ def unet_generator(input_size=(256, 256, 1)):
 
 print("加載生成器模型...")
 generator = unet_generator()
-model_weights = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\training_checkpoints\\generator_epoch_38' # 替換為您的權重檔路徑
+model_weights = 'C:\\Users\\ytes6\\OneDrive\\文件\\GitHub\\Project-Denoise\\training_checkpoints\\generator_epoch_38'
 # model_weights = 'best_generator_model.h5'
 generator.load_weights(model_weights)
 print(f"已加載模型權重：{model_weights}")
 
-# 加載圖像函數
 def load_images_from_folder(folder, target_size=(256, 256)):
     images = []
     filenames = sorted(glob.glob(os.path.join(folder, '*.png')))
@@ -156,7 +155,6 @@ for idx in range(len(noisy_images)):
             plt.suptitle(f'PSNR: {psnr:.2f} dB, SSIM: {ssim:.4f}, MSE: {mse:.4f}')
             plt.tight_layout()
 
-            # 將圖像存到指定資料夾
             save_visualization_path = os.path.join(visualization_save_folder, f"visualization_{idx}.png")
             plt.savefig(save_visualization_path)
             plt.show()
