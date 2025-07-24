@@ -115,7 +115,7 @@ for idx in range(len(noisy_images)):
     filename = os.path.basename(noisy_filenames[idx])
 
     noisy_img_input = np.expand_dims(noisy_img, axis=0)
-    denoised_img = generator.predict(noisy_img_input)[0]
+    denoised_img = generator.predict(noisy_img_input)[0] # 生成器預測原始影像
 
     denoised_img_uint8 = (denoised_img * 255).astype(np.uint8)
     if denoised_img_uint8.ndim == 2:
